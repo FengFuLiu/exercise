@@ -63,19 +63,27 @@
  */
 
 // @lc code=start
-// 暴力解法，超时
-/* function maxArea(height: number[]): number {
+/*  
+暴力解法优化版：
+剪枝条件解析：if (height[i] * (height.length - (i + 1)) > area)
+我们把结果近似看作一个长方形，height[i]即为本次循环的长方形高，水平坐标的区间为长方形底；
+所以是否进入第二轮循环的条件就是这次循环的高*底起码要大于之前通过area变量存储的最大面积；
+但是在这次循环中我们不知道底的坐标在哪，底多大是我们不知道的，那我们就给他能给的最大的底；最大的底的长度就是height.length - (i + 1) */
+function maxArea(height: number[]): number {
   const getArea = (start: number, end: number) => Math.min(height[start], height[end]) * (end - start);
   let area = 0;
   for (let i = 0; i < height.length; i++) {
-    for (let j = i + 1; j < height.length; j++) {
-      area = Math.max(area, getArea(i, j));
+    // 核心剪枝条件
+    if (height[i] * (height.length - (i + 1)) > area) {
+      for (let j = i + 1; j < height.length; j++) {
+        area = Math.max(area, getArea(i, j));
+      }
     }
   }
   return area
-}; */
+};
 // 对撞双指针，思路看官方题解
-function maxArea(height: number[]): number {
+/* function maxArea(height: number[]): number {
   const getArea = (start: number, end: number) => Math.min(height[start], height[end]) * (end - start);
   let area = 0, leftPointer = 0, rightPointer = height.length - 1;
   while (leftPointer < rightPointer) {
@@ -89,6 +97,6 @@ function maxArea(height: number[]): number {
     }
   }
   return area
-};
+}; */
 // @lc code=end
 
