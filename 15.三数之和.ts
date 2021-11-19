@@ -63,7 +63,7 @@ function threeSum(nums: number[]): number[][] {
   if (nums.length < 3) return res;
   for (let i = 0; i < ascNums.length; i++) {
     const requiredSum = 0 - ascNums[i];//转为求两数之和
-    let leftPointer = 0, rightPointer = ascNums.length - 1;;
+    let leftPointer = i, rightPointer = ascNums.length - 1;;
     while (leftPointer < rightPointer) {
       if (leftPointer === i) {
         leftPointer++;
