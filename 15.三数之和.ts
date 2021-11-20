@@ -54,28 +54,31 @@
 
 // @lc code=start
 
-const isRepeatItem = (list: number[][], ele: number[]) => list.length > 0 && list.some(item => String(item.sort((a, b) => a - b)).includes(String(ele.sort((a, b) => a - b))))
-
+// 二维数组去重
+function unique(matrix: number[][]): number[][] {
+  let res = new Map();
+  matrix.map(item => {
+    item.sort((a, b) => a - b);
+    res.set(String(item), item)
+  })
+  return [...res.values()];
+}
 
 function threeSum(nums: number[]): number[][] {
   const res = [];
   const ascNums = nums.sort((a, b) => a - b);
   if (nums.length < 3) return res;
   for (let i = 0; i < ascNums.length; i++) {
+    //因为已经为升序，如果nums[i]>0,后面的数必然也大于0，相加不可能为0
+    if (nums[i] > 0) return unique(res);
+    //  对于重复元素：跳过，避免出现重复解
+    if (i > 0 && nums[i] === nums[i - 1]) continue;
     const requiredSum = 0 - ascNums[i];//转为求两数之和
-    let leftPointer = i, rightPointer = ascNums.length - 1;;
+    let leftPointer = i + 1, rightPointer = ascNums.length - 1;
     while (leftPointer < rightPointer) {
-      if (leftPointer === i) {
-        leftPointer++;
-        continue;
-      }
-      if (rightPointer === i) {
-        rightPointer--;
-        continue;
-      }
       const leftVal = ascNums[leftPointer], rightVal = ascNums[rightPointer];
       const twoNumSum = leftVal + rightVal;
-      if (twoNumSum === requiredSum && !isRepeatItem(res, [leftVal, rightVal, ascNums[i]])) {
+      if (twoNumSum === requiredSum) {
         res.push([leftVal, rightVal, ascNums[i]]);
       }
       if (twoNumSum < requiredSum) {
@@ -85,7 +88,7 @@ function threeSum(nums: number[]): number[][] {
       }
     }
   }
-  return res;
+  return unique(res);
 };
 // @lc code=end
 
