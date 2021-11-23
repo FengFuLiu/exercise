@@ -77,23 +77,23 @@
 // }
 
 function swapPairs(head: ListNode | null): ListNode | null {
-  if (!head) return null;
+  if (!head || !head.next) return head;
   let index = 0;
-  let res = new ListNode(-1);
-  res.next = head;
-  let temp = res.next;
+  let res = new ListNode(-1, head);
+  let temp = res;
   while (temp?.next) {
     const isEven = index % 2 === 0;
-    const cloneNode = JSON.parse(JSON.stringify(temp.next));
+    const node1 = temp.next;
+    const node2 = temp.next?.next ?? null;
 
-    if (isEven) {
-      cloneNode.next = cloneNode.next?.next ?? null;
-
-      temp.next = temp.next?.next ?? null;
-      if (temp.next?.next) temp.next.next = cloneNode;
+    if (isEven && node2) {
+      // 顺序不能错，node2.next有被用到，最后再改变
+      temp.next = node2;
+      node1.next = node2.next;
+      node2.next = node1;
     }
     index++;
-    temp=temp.next;
+    temp = temp.next;
   }
   return res.next;
 };
