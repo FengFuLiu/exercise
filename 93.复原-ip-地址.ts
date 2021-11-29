@@ -74,13 +74,10 @@
 // @lc code=start
 /**
  * 判断整数的正确性
- * @param {string or number} val
- * @return {boolean}
  */
-const isValid = (val: string | number): boolean => {
-  if (val === '') return false;
-  val = Number(val);
-  return !(val < 0 || val > 255 || (val[0] === 0 && String(val).length > 1))
+const isValid = (val: string): boolean => {
+  if (val === '' || (val[0] === '0' && val.length > 1)) return false;
+  return !(Number(val) < 0 || Number(val) > 255)
 }
 
 function restoreIpAddresses(s: string): string[] {
@@ -94,23 +91,20 @@ function restoreIpAddresses(s: string): string[] {
       if (!isValid(val)) continue;
       if (times === blockNum) {
         const restVal = s.slice(i + 1);
-        console.log(curr, 'curr', val, 'val', restVal, 'restVal', isValid(val), isValid(restVal), curr.length)
         if (!isValid(restVal)) continue;
         curr.push(val);
         curr.push(restVal);
         const strCurr = String(curr).replace(/\,/g, '.');
         res.push(strCurr);
-        // const isRepeat=res.includes(strCurr);
-        // !isRepeat&&res.push(strCurr);
-        return;
-
-
+        curr.pop();
+        curr.pop();
       }
       curr.push(val);
       ++times;
       backtracking(i + 1, times);
       curr.pop();
       --times;
+      console.log(curr, times)
     }
   }
   backtracking(0, 1)
