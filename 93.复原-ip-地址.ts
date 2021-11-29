@@ -83,7 +83,7 @@ const isValid = (val: string): boolean => {
 function restoreIpAddresses(s: string): string[] {
   const res: string[] = [];
   const curr = [];
-  const blockNum = 3;
+  const blockNum = 2;//ip中前两段是独立互不关联的，第四段是由第三段决定的（第三段确定后剩下的即为第四段），所以要分开处理
 
   const backtracking = (index: number, times: number) => {
     for (let i = index; i < s.length + 1; i++) {
@@ -92,22 +92,18 @@ function restoreIpAddresses(s: string): string[] {
       if (times === blockNum) {
         const restVal = s.slice(i + 1);
         if (!isValid(restVal)) continue;
-        curr.push(val);
-        curr.push(restVal);
-        const strCurr = String(curr).replace(/\,/g, '.');
-        res.push(strCurr);
-        curr.pop();
-        curr.pop();
+        curr.push(val, restVal);
+        res.push(String(curr).replace(/\,/g, '.'));
+        curr.splice(-2);
       }
       curr.push(val);
       ++times;
       backtracking(i + 1, times);
       curr.pop();
       --times;
-      console.log(curr, times)
     }
   }
-  backtracking(0, 1)
+  backtracking(0, 0)
 
   return res;
 };
