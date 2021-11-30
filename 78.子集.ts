@@ -50,19 +50,22 @@ function subsets(nums: number[]): number[][] {
   const res: number[][] = [[]];
   const curr: number[] = [];
 
-  const backtracking = (len: number) => {
-    for (let i = 0; i < nums.length; i++) {
-      const val = nums.slice(i, i + len);
-      res.push([...curr]);
-      console.log(curr)
-      if (curr.length === nums.length) return;
-      curr.push(...val);
-      backtracking(len + 1);
+  const backtracking = (index: number) => {
+    for (let i = index; i < nums.length+1; i++) {
+    //   const val = nums.slice(i, i + len);
+        const val=nums[i];
+      console.log(curr,index,curr.length === nums.length)
+      if (curr.length === nums.length) {
+        res.push([...curr]);
+        return
+      }
+      curr.push(val);
+      backtracking(index + 1);
       curr.pop();
     }
   }
 
-  backtracking(1);
+  backtracking(0);
 
   return res;
 };
