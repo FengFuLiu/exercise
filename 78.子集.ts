@@ -53,10 +53,9 @@ function subsets(nums: number[]): number[][] {
   const backtracking = (len: number) => {
     for (let i = 0; i < nums.length; i++) {
       const val = nums.slice(i, i + len);
-      if (curr.length === len) {
-        res.push([...curr]);
-        return;
-      };
+      res.push([...curr]);
+      console.log(curr)
+      if (curr.length === nums.length) return;
       curr.push(...val);
       backtracking(len + 1);
       curr.pop();
