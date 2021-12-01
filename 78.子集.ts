@@ -50,23 +50,22 @@ function subsets(nums: number[]): number[][] {
   const res: number[][] = [[]];
   const curr: number[] = [];
 
-  const backtracking = (index: number) => {
-    for (let i = index; i < nums.length+1; i++) {
-    //   const val = nums.slice(i, i + len);
-        const val=nums[i];
-      console.log(curr,index,curr.length === nums.length)
-      if (curr.length === nums.length) {
-        res.push([...curr]);
-        return
-      }
+  const backtracking = (index: number, len: number) => {
+    if (curr.length === len) {
+      res.push([...curr]);
+      return
+    }
+    for (let i = index; i < nums.length; i++) {
+      const val = nums[i];
       curr.push(val);
-      backtracking(index + 1);
+      backtracking(i + 1, len);
       curr.pop();
     }
   }
-
-  backtracking(0);
-
+  // 求从1到nums.length长度的子集
+  for (let i = 1; i < nums.length + 1; i++) {
+    backtracking(0, i);
+  }
   return res;
 };
 // @lc code=end
