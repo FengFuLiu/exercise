@@ -57,42 +57,53 @@
  */
 
 // @lc code=start
-
-const getLeftIndex = (nums: number[], target: number) => {
-  let left: number = 0, right: number = nums.length - 1, res = -1;
+// https://github.com/labuladong/fucking-algorithm/blob/master/%E7%AE%97%E6%B3%95%E6%80%9D%E7%BB%B4%E7%B3%BB%E5%88%97/%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE%E8%AF%A6%E8%A7%A3.md
+const binarySearchLeftBound = (nums: number[], target: number) => {
+  let left: number = 0, right: number = nums.length - 1;
   while (left <= right) {
     const middle = Math.floor(left + (right - left) / 2);
     const baseVal = nums[middle];
-    if (target <= baseVal) {
+    if (baseVal > target) {
       right = middle - 1;
-      res = right;
+    } else if (baseVal < target) {
+      left = middle + 1
     } else {
-      left = middle + 1;
+      right = middle - 1
     }
   }
-  return res
+  if (nums[left] !== target || left < 0) left = -1;
+  return left
 }
 
-const getRightIndex = (nums: number[], target: number) => {
-  let left: number = 0, right: number = nums.length - 1, res = -1;
+const binarySearchRightBound = (nums: number[], target: number) => {
+  let left: number = 0, right: number = nums.length - 1;
   while (left <= right) {
     const middle = Math.floor(left + (right - left) / 2);
     const baseVal = nums[middle];
-    if (target < baseVal) {
+    if (baseVal > target) {
       right = middle - 1;
-    } else {
-      res = left;
+    } else if (baseVal < target) {
       left = middle + 1;
+    } else {
+      left = middle + 1
     }
   }
-  return res
+  if (nums[right] !== target || right < 0) right = -1;
+  return right
 }
 
 function searchRange(nums: number[], target: number): number[] {
-  const res: number[] = [-1, -1];
-  res[0] = getLeftIndex(nums, target);
-  res[1] = getRightIndex(nums, target);
-  return res;
+  if (nums.length === 1) {
+    if (nums[0] === target) {
+      return [0, 0]
+    } else {
+      return [-1, -1]
+    }
+  }
+  const leftIndex = binarySearchLeftBound(nums, target);
+  const rightIndex = binarySearchRightBound(nums, target);
+
+  return [leftIndex, rightIndex];
 };
 // @lc code=end
 
