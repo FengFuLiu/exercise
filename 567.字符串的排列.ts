@@ -44,44 +44,26 @@
  * 
  * 
  */
-
+// 耗时较久，有个对比字母的逻辑可以优化，优化参考下面
+// https://leetcode-cn.com/problems/permutation-in-string/solution/zi-fu-chuan-de-pai-lie-by-leetcode-solut-7k7u/
 // @lc code=start
 function checkInclusion(s1: string, s2: string): boolean {
-  let leftPoint = 0, rightPoint = 0, res = false, cloneS1 = s1, firstIncludeIndex = 0;
+  let leftPoint = 0, rightPoint = 1, res = false, sortS1 = String([...s1].sort());
   if (s1.length === 1 || s2.length == 1) return s2.includes(s1);
   if (s2.length < s1.length) return res;
-  while (leftPoint <= rightPoint && rightPoint <= s2.length) {
-    const currStr = s2[rightPoint];
-    const currStrIndex = cloneS1.indexOf(currStr);
-    console.log(cloneS1, currStr, currStrIndex, 'currStrIndex')
-    if (currStrIndex !== -1) {
-      if (cloneS1 === s1) {
-        console.log(currStrIndex, cloneS1, s1)
-        firstIncludeIndex = rightPoint;
-      }
-      const cloneS1Arr = [...cloneS1]
-      cloneS1Arr[currStrIndex] = '0';
-      cloneS1 = cloneS1Arr.join('');
-    }
-    if ([...cloneS1].filter(item => item !== '0').length === 0) {
-      // console.log(firstIncludeIndex, cloneS1.toString(), 'cloneS1')
-      leftPoint = firstIncludeIndex;
-      const currStrBlock = s2.slice(leftPoint, rightPoint + 1);
-      // console.log(currStrBlock)
-      if ([...currStrBlock].filter(Boolean).length === s1.length) {
-        res = true;
-        break;
-      } else {
-        cloneS1 = s1;
-        if (rightPoint >= s2.length) {
-          res = false;
-          break;
-        } else {
-          rightPoint++;
-        }
-      }
-    } else {
+  while (leftPoint < rightPoint && rightPoint <= s2.length) {
+    const currBlockStr = s2.slice(leftPoint, rightPoint + 1);
+    if (currBlockStr.length < s1.length) {
       rightPoint++;
+    } else {
+      const isIncludesS2 = String([...currBlockStr].sort()) === sortS1;
+      if (isIncludesS2) {
+        res = true;
+        break
+      } else {
+        rightPoint++;
+        leftPoint++;
+      }
     }
   }
   return res;
