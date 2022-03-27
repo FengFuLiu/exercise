@@ -58,9 +58,29 @@
  */
 
 // @lc code=start
-const isPalindrome = (str: string) => String([...str].reverse()) === String([...str]);
+// 中心扩展法
+// https://leetcode-cn.com/problems/longest-palindromic-substring/solution/zhong-xin-kuo-san-dong-tai-gui-hua-by-liweiwei1419/
+// function longestPalindrome(s: string): string {
 
+// };
 function longestPalindrome(s: string): string {
+  let res = '';
+  const expand = (str: string, l: number, r: number) => {
+    while (str[l] === str[r] && l >= 0 && r < str.length) {
+      l--;
+      r++;
+    }
+    return str.substring(l + 1, r)
+  }
+  for (let i = 0; i < s.length; i++) {
+    const tempRes1 = expand(s, i, i);
+    const tempRes2 = expand(s, i, i + 1);
+    res = res.length > tempRes1.length ? res : tempRes1;
+    res = res.length > tempRes2.length ? res : tempRes2;
+  }
+  return res
+};
+/* function longestPalindrome(s: string): string {
   const { length } = s;
   if (length < 2) return s;
   // 创建初始值：
@@ -73,19 +93,20 @@ function longestPalindrome(s: string): string {
   };
   // todo
 
-};
-/*  暴力枚举，超出时间限制
+}; */
+//  暴力枚举，超出时间限制54/180
+// 比[...str].reverse()......快3个测试用例
+/* const isPalindrome = (str: string) => str.split("").reverse().join("") === str;
 function longestPalindrome(s: string): string {
-  let str = '';
-  if (s.length === 1) str = s;
+  let str = s[0];
   for (let i = 0; i < s.length; i++) {
-    for (let j = i + 1; j < s.length; j++) {
+    for (let j = i + str.length; j < s.length; j++) {
       const tempStr = s.slice(i, j + 1);
       if (isPalindrome(tempStr)) {
-        if (tempStr.length > str.length) str = tempStr;
+        str = tempStr;
       }
     }
-  }
+  };
   return str;
 }; */
 // @lc code=end
